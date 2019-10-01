@@ -1,23 +1,5 @@
 package org.zerock.controller;
 
-import org.junit.runner.RunWith;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-
-import lombok.Data;
-import lombok.extern.log4j.Log4j;
-
-@Data
-@Log4j
-@RunWith(SpringJUnit4ClassRunner.class)
-@WebAppConfiguration
-public class SampleControllerTests {
-	
-
-	
-}
-package org.zerock.controller;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
