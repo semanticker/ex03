@@ -4,4 +4,27 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.zerock.mapper.ReplyMapper">
 	
+	<insert id="insert" useGeneratedKeys="true" keyProperty="rno">
+		insert into zr_tbl_reply(bno, reply, replyer)
+		values(#{bno}, #{reply}, #{replyer})
+	</insert>
+	
+	<select id="read" resultType="org.zerock.domain.ReplyVO">
+		select * from zr_tbl_reply where rno = #{rno}
+	</select>
+	
+	<delete id="delete">
+		delete from zr_tbl_reply where rno = #{rno}
+	</delete>
+	
+	<update id="update">
+		update zr_tbl_reply set reply = #{reply}, updatedate = now() where rno = #{rno}
+	</update>
+	
+	<select id="getListWithPaging" resultType="org.zerock.domain.ReplyVO">
+		select rno, bno, reply, replyer, replyDate, updatedate
+		  from zr_tbl_reply
+		  where bno = #{bno}
+		  order by rno asc
+	</select>
 </mapper>
