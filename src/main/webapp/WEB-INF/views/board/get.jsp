@@ -22,7 +22,7 @@
     <section class="content"> 
       <div class="row">
         <!-- left column -->
-        <div class="col-md-6">
+        <div class="col-md-12">
           <!-- general form elements -->
           <div class="box box-primary">
             <div class="box-header with-border">
@@ -72,7 +72,38 @@
       <!-- /.row -->
       </div>
       <!--/.col (left) -->
-      </section>
+      
+      <!-- Reply -->
+      <div class="row">
+      	<div class="col-lg-12">
+      		<!-- /.panel -->
+      		<div class="panel panel-default">
+      			<div class="panel-heading">
+      				<i class="fa fa-comments fa-fw"></i>Reply
+      			</div>
+      			
+      			<div class="panel-body">
+      			
+      				<ul class="chat">
+      					<li class="left clearfix" data-rno='12'>
+      						<div>
+      							<div class="header">
+      								<strong class="primary-font">user00</strong>
+      								<small class="pull-right text-muted">2018-01-01 13:13</small>
+      							</div>
+      							<p>good job!</p>
+      						</div>
+      					</li>
+      					<!--  end reply -->
+      				</ul>
+      					<!-- end ul -->
+      			</div>
+      			<!-- /.panel .chat-panel -->
+      		</div>
+      	</div>
+      	<!-- ./ end row -->
+      </div>
+    </section>
     <!-- /.content -->
     
     <script type="text/javascript" src="/resources/js/reply.js"></script>
@@ -84,12 +115,52 @@
     		
     		var bnoValue = '<c:out value="${board.bno}"/>';
     		
+    		/*
     		replyService.add(
     				{reply:"JS Test", replyer:"tester", bno:bnoValue},
     				function(result){
     					alert("RESLT: " + result);
     				}
-				);
+			);
+    		*/
+    		
+    		/*
+    		replyService.getList({bno:bnoValue, page:1}, function(list){
+    			console.log(arguments);
+    			for(var i=0, len = list.length||0; i<len; i++){
+    				console.log(list[i]);
+    			}
+    			
+    		});
+    		*/
+    		
+    		/*
+    		replyService.remove(2, function(count){
+    			console.log(count);
+    			
+    			if(count == "success"){
+    				alert("REMOVED")
+    			}
+    			
+    		}, function(err){
+    			alert("ERROR");
+    		});
+    		*/
+    		
+    		/*
+    		replyService.update(
+    				{reply:"udpated- JS Test", rno: 69, replyer:"tester", bno:bnoValue},
+    				function(result){
+    					alert("RESLT: " + result);
+    				}
+			);
+    		*/
+    		
+    		replyService.get(68, function(data){
+    			console.log(data);
+    		});
+    		
+    		
     	});
    	</script>
     
