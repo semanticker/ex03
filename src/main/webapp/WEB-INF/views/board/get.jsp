@@ -80,6 +80,7 @@
       		<div class="panel panel-default">
       			<div class="panel-heading">
       				<i class="fa fa-comments fa-fw"></i>Reply
+      				<button id="addReplyBtn" class="btn btn-primary btn-xs pull-right">New Reply</button>
       			</div>
       			
       			<div class="panel-body">
@@ -106,6 +107,44 @@
     </section>
     <!-- /.content -->
     
+    
+    <div class="modal fade" id="modal-default">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Default Modal</h4>
+          </div>
+          <div class="modal-body">
+          	<div class="form-group">
+          		<label>Reply</label>
+          		<input class="form-control" name="reply" value="New reply">
+          	</div>
+          	<div class="form-group">
+          		<label>Replyer</label>
+          		<input class="form-control" name="replyer" value="New reply">
+          	</div>
+          	<div class="form-group">
+          		<label>Reply Date</label>
+          		<input class="form-control" name="replyDate" value="New reply">
+          	</div>
+            <p>One fine body&hellip;</p>
+          </div>
+          <div class="modal-footer">
+            <button id='modalModBtn' type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+            <button id='modalRemoveBtn' type="button" class="btn btn-danger" data-dismiss="modal">Remove</button>
+            <button id='modalRegisterBtn' type="button" class="btn btn-primary" data-dismiss="modal">Register</button>
+            <button id='modalCloseBtn' type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+    
+    
     <script type="text/javascript" src="/resources/js/reply.js"></script>
     
      <script type="text/javascript">
@@ -114,6 +153,55 @@
     		console.log("JS TEST");
     		
     		var bnoValue = '<c:out value="${board.bno}"/>';
+    		var replyUL = $(".chat");
+    		
+    		showList(1);
+    		
+    		function showList(page){
+    			replyService.getList({bno:bnoValue, page: page || 1}, function(list){
+    				var str = "";
+    				if(list==null || list.length == 0){
+    					replyUL.html("");
+    					
+    					return;
+    				}
+    				
+    				for(var i=0, len = list.length || 0; i <len; i++){
+    					str += "<li class='left clearfix' data-rno='" + list[i].rno + "'>";
+    					str += "<div>";
+    					str += "<div class='header'>";
+    					str += "<strong class='primary-font'>" + list[i].replyer + "</strong>";
+    					str += "<small class='pull-right text-muted'>" + replyService.displayTime(list[i].replyDate) + "</small>";
+    					str += "</div>"
+    					str += "<p>" + list[i].reply + "</p>";
+    					str += "</div>";
+    					str += "</li>";
+    				}
+    				replyUL.html(str); 
+    				
+    			});
+    		}
+    		
+    		var modal = $(".modal");
+    		var modalInputReply = modal.find("input[name='reply']");
+    		var modalInputReplyer = modal.find("input[name='replyer']");
+    		var modalInputReplyDate = modal.find("input[name='replyDate']");
+    		
+    		var modalModBtn = $("#modalModBtn");
+    		var modalRemoveBtn = $("#modalRemoveBtn");
+    		var modalRegisterBtn = $("#modalRegisterBtn");
+    		
+    		
+    		$('#addReplyBtn').on("click", function(e){
+    			
+    			modal.find("input").val("");
+    			modalInputReplyDate.closest("div").hide();
+    			modal.find("button[id != 'modalCloseBtn']").hide();
+    			
+    			modalRegisterBtn.show();
+    			
+    			modal.modal("show");
+    		});
     		
     		/*
     		replyService.add(
@@ -156,9 +244,11 @@
 			);
     		*/
     		
+    		/*
     		replyService.get(68, function(data){
     			console.log(data);
     		});
+    		*/
     		
     		
     	});
