@@ -99,6 +99,10 @@
       				</ul>
       					<!-- end ul -->
       			</div>
+      			
+      			<div class="panel-footer">
+      			
+      			</div>
       			<!-- /.panel .chat-panel -->
       		</div>
       	</div>
@@ -132,7 +136,7 @@
             <p>One fine body&hellip;</p>
           </div>
           <div class="modal-footer">
-            <button id='modalModBtn' type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+            <button id='modalModBtn' type="button" class="btn btn-warning" data-dismiss="modal">Modify</button>
             <button id='modalRemoveBtn' type="button" class="btn btn-danger" data-dismiss="modal">Remove</button>
             <button id='modalRegisterBtn' type="button" class="btn btn-primary" data-dismiss="modal">Register</button>
             <button id='modalCloseBtn' type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -147,6 +151,8 @@
     
     <script type="text/javascript" src="/resources/js/reply.js"></script>
     
+
+    
      <script type="text/javascript">
     	$(document).ready(function(){
     		console.log("======================");
@@ -154,15 +160,27 @@
     		
     		var bnoValue = '<c:out value="${board.bno}"/>';
     		var replyUL = $(".chat");
+    		var pageNum = 1;
+    		var replyPageFooter = $(".panel-footer");
     		
     		showList(1);
     		
     		function showList(page){
-    			replyService.getList({bno:bnoValue, page: page || 1}, function(list){
+    			replyService.getList({bno:bnoValue, page: page || 1}, function(replyCnt, list){
+    				
+    				console.log("replyCnt:" + replyCnt);
+    				console.log("list:" + list);
+    				console.log(list);
+    				
+    				if(page == -1){
+    					pageNum = Math.ceil(replyCnt/10.0);
+    					showList(pageNum);
+    					return;
+    				}
+    				
     				var str = "";
     				if(list==null || list.length == 0){
-    					replyUL.html("");
-    					
+    					//replyUL.html("");
     					return;
     				}
     				
@@ -178,9 +196,55 @@
     					str += "</li>";
     				}
     				replyUL.html(str); 
+    				showReplyPage(replyCnt);
     				
     			});
     		}
+    		
+    		function showReplyPage(replyCnt){
+    			
+        		var endNum = Math.ceil(pageNum/10.0) * 10;
+        		console.log("pageNum:",pageNum);
+        		var startNum = endNum -9;
+        		
+        		var prev = startNum != 1;
+        		var next = false;
+        		
+        		if(endNum * 10 >= replyCnt){
+        			endNum = Math.ceil(replyCnt/10.0);
+        		}
+        		
+        		if(endNum *10 < replyCnt){
+        			next = true;
+        		}
+        		
+        		var str = "<ul class='pagination pull-right'>";
+        		
+        		if(prev){
+        			str += "<li class='page-item'>";
+        			str += "<a class='page-link' href='" + (startNum-1) + "'>Prev</a>";
+        			str += "</li>";
+        		}
+        		
+        		for(var i = startNum; i<=endNum; i++){
+        			var active = pageNum == i ? "active" : "";
+        			
+        			str += "<li class='page-item " + active + "'>";
+        			str += "<a class='page-link' href='" + i + "'>" + i + "</a>";
+        			str += "</li>";
+        		}
+        		
+        		if(next){
+        			str += "<li class='page-item'>";
+        			str += "<a class='page-link' href='" + (endNum+1) + "'>Next</a>";
+        			str += "</li>";
+        		}
+        		
+        		str += "</ul>";
+        		
+        		console.log(">>>>" +str);
+        		replyPageFooter.html(str);
+        	}
     		
     		var modal = $(".modal");
     		var modalInputReply = modal.find("input[name='reply']");
@@ -201,6 +265,77 @@
     			modalRegisterBtn.show();
     			
     			modal.modal("show");
+    		});
+    		
+    		$('#modalRegisterBtn').on("click", function(e){
+    			var reply = {
+    					reply:modalInputReply.val(),
+    					replyer:modalInputReplyer.val(),
+    					bno:bnoValue
+    			};
+    			
+    			replyService.add(reply, function(result){
+    				alert(result);
+    				
+    				modal.find("input").val("");
+    				modal.modal("hide");
+    				
+    				//showList(1);
+    				showList(-1);
+    			})
+    		})
+    		
+    		$(".chat").on("click", "li", function(e){
+    			var rno = $(this).data("rno");
+    			
+    			
+    			replyService.get(rno, function(reply){
+    				modalInputReply.val(reply.reply);
+    				modalInputReplyer.val(reply.replyer);
+    				modalInputReplyDate.val(replyService.displayTime(reply.replyDate)).attr("readonly", "readonly");
+    				modal.data("rno", reply.rno);
+    				
+    				modal.find("button[id!='modalCloseBtn']").hide();
+    				modalModBtn.show();
+    				modalRemoveBtn.show();
+    				
+    				$(".modal").modal("show");
+    			});
+    			
+    			console.log(rno);
+    		});
+    		
+    		modalModBtn.on("click", function(e){
+    			var reply = {rno:modal.data("rno"), reply:modalInputReply.val()};
+    			
+    			replyService.update(reply, function(result){
+    				alert(result);
+    				modal.modal("hide");
+    				//showList(1);
+    				alert(pageNum);
+    				showList(pageNum);
+    			});
+    		});
+    		
+    		modalRemoveBtn.on("click", function(e){
+    			var rno = modal.data("rno");
+    			
+    			replyService.remove(rno, function(result){
+    				alert(result);
+    				modal.modal("hide");
+    				//showList(1);
+    				showList(pageNum);
+    			});
+    		});
+    		
+    		replyPageFooter.on("click", "li a", function(e){		
+    			e.preventDefault();
+    			console.log("page click");
+    			
+    			var targetPageNum = $(this).attr("href");
+    			console.log("targetPageNum:" + targetPageNum);
+    			pageNum = targetPageNum;
+    			showList(pageNum);
     		});
     		
     		/*

@@ -70,7 +70,14 @@ public class ReplyMapperTests {
 	@Test
 	public void testList() {
 		Criteria cri = new Criteria();
-		List<ReplyVO> replies = mapper.getListWithPaging(cri, 4L);
+		List<ReplyVO> replies = mapper.getListWithPaging(cri, 892460L);
 		replies.forEach(reply -> log.info(reply));
+	}
+	
+	@Test
+	public void testListPaging() {
+		Criteria cri = new Criteria(2,10);
+		List<ReplyVO> replies = mapper.getListWithPaging(cri, 892460L);
+		replies.forEach(reply->log.info(reply));
 	}
 }

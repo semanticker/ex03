@@ -21,10 +21,36 @@
 		update zr_tbl_reply set reply = #{reply}, updatedate = now() where rno = #{rno}
 	</update>
 	
-	<select id="getListWithPaging" resultType="org.zerock.domain.ReplyVO">
+	<!-- <select id="getListWithPaging" resultType="org.zerock.domain.ReplyVO">
 		select rno, bno, reply, replyer, replyDate, updatedate
 		  from zr_tbl_reply
 		  where bno = #{bno}
 		  order by rno asc
+	</select> -->
+	
+	<select id="getListWithPaging" resultType="org.zerock.domain.ReplyVO">
+	
+		<![CDATA[
+		select rno, bno, reply, replyer, replyDate, updatedate, rownum
+		  from (
+			select rno, bno, reply, replyer, replyDate, updatedate, ROW_NUMBER() OVER() AS ROWNUM
+			  from zr_tbl_reply
+			  where bno = #{bno}
+			    and rno > 0
+			   limit #{cri.pageNum} * #{cri.amount}
+		) as pdata where rownum > (#{cri.pageNum}-1) * #{cri.amount}   
+		  order by rno asc
+		
+		]]>
 	</select>
+	
+	<select id="getCountByBno" resultType="int">
+		<![CDATA[
+			select count(*) from zr_tbl_reply where bno = #{bno}
+		]]>
+		
+		
+	</select>
+	
+	
 </mapper>

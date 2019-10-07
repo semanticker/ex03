@@ -32,7 +32,8 @@ var replyService = (function(){
 		$.getJSON("/replies/pages/" + bno + "/" + page + ".json",
 				function(data){
 					if(callback){
-						callback(data);
+						//callback(data);
+						callback(data.replyCnt, data.list);
 					}
 				}).fail(function(xhr, status, err){
 					if(error){
@@ -94,6 +95,7 @@ var replyService = (function(){
 	}
 	
 	function displayTime(timeValue){
+		
 		var today = new Date();
 		
 		var gap = today.getTime() - timeValue;
@@ -102,6 +104,7 @@ var replyService = (function(){
 		var str = "";
 		
 		if(gap < (1000 * 60 * 60 * 24)){
+			
 			var hh = dateObj.getHours();
 			var mi = dateObj.getMinutes();
 			var ss = dateObj.getSeconds();
