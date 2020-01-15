@@ -72,42 +72,36 @@
       <!-- /.row -->
       </div>
       <!--/.col (left) -->
+
+    <!-- Reply -->
+    <div class="row">
+        <div class="col-lg-12">
+            <!-- /.panel -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+
+        <i class="fa fa-comments fa-fw"></i> Reply
+        <button id='addReplyBtn' class='btn btn-primary btn-xs pull-right'>New Reply</button>
+      </div>      
       
-      <!-- Reply -->
-      <div class="row">
-      	<div class="col-lg-12">
-      		<!-- /.panel -->
-      		<div class="panel panel-default">
-      			<div class="panel-heading">
-      				<i class="fa fa-comments fa-fw"></i>Reply
-      				<button id="addReplyBtn" class="btn btn-primary btn-xs pull-right">New Reply</button>
-      			</div>
-      			
-      			<div class="panel-body">
-      			
-      				<ul class="chat">
-      					<li class="left clearfix" data-rno='12'>
-      						<div>
-      							<div class="header">
-      								<strong class="primary-font">user00</strong>
-      								<small class="pull-right text-muted">2018-01-01 13:13</small>
-      							</div>
-      							<p>good job!</p>
-      						</div>
-      					</li>
-      					<!--  end reply -->
-      				</ul>
-      					<!-- end ul -->
-      			</div>
-      			
-      			<div class="panel-footer">
-      			
-      			</div>
-      			<!-- /.panel .chat-panel -->
-      		</div>
-      	</div>
-      	<!-- ./ end row -->
+      
+      <!-- /.panel-heading -->
+      <div class="panel-body">        
+      
+        <ul class="chat">
+
+        </ul>
+        <!-- ./ end ul -->
       </div>
+      <!-- /.panel .chat-panel -->
+
+	<div class="panel-footer"></div>
+
+
+		</div>
+  </div>
+  <!-- ./ end row -->
+</div>
     </section>
     <!-- /.content -->
     
@@ -166,14 +160,20 @@
     		showList(1);
     		
     		function showList(page){
+    			//alert('page is' + page);
     			replyService.getList({bno:bnoValue, page: page || 1}, function(replyCnt, list){
     				
-    				console.log("replyCnt:" + replyCnt);
-    				console.log("list:" + list);
-    				console.log(list);
+    				//console.log("replyCnt:" + replyCnt);
+    				//console.log("list:" + list);
+    				//console.log("page:" + page);
+    				//console.log("page || :" + page || 1);
+    				//console.log(list);
     				
     				if(page == -1){
+    					//alert('hit');
     					pageNum = Math.ceil(replyCnt/10.0);
+    					//console.log(replyCnt, pageNum);
+    					//alert(pageNum);
     					showList(pageNum);
     					return;
     				}
@@ -275,10 +275,11 @@
     			};
     			
     			replyService.add(reply, function(result){
-    				alert(result);
+    				//alert(result);
     				
     				modal.find("input").val("");
     				modal.modal("hide");
+    				
     				
     				//showList(1);
     				showList(-1);
@@ -290,7 +291,7 @@
     			
     			
     			replyService.get(rno, function(reply){
-    				modalInputReply.val(reply.reply);
+    				modalInputReply.val(reply.reply); 
     				modalInputReplyer.val(reply.replyer);
     				modalInputReplyDate.val(replyService.displayTime(reply.replyDate)).attr("readonly", "readonly");
     				modal.data("rno", reply.rno);
@@ -309,10 +310,10 @@
     			var reply = {rno:modal.data("rno"), reply:modalInputReply.val()};
     			
     			replyService.update(reply, function(result){
-    				alert(result);
+    				//alert(result);
     				modal.modal("hide");
     				//showList(1);
-    				alert(pageNum);
+    				//alert(pageNum);
     				showList(pageNum);
     			});
     		});
@@ -321,7 +322,7 @@
     			var rno = modal.data("rno");
     			
     			replyService.remove(rno, function(result){
-    				alert(result);
+    				//alert(result);
     				modal.modal("hide");
     				//showList(1);
     				showList(pageNum);

@@ -19,7 +19,7 @@ import org.zerock.service.ReplyService;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
 
-@RequestMapping("/replies/")
+@RequestMapping("/replies/*")
 @RestController
 @Log4j
 @AllArgsConstructor
@@ -50,6 +50,13 @@ public class ReplyController {
 			@PathVariable("page") int page,
 			@PathVariable("bno") Long bno){
 		log.info("getList....");
+		
+		// page 번호는 negative 값을 가질수 없으므로 0 으로 설정
+		// 추후 재 조회됨
+		if(page==-1) {
+			page = 0;
+		}
+		
 		Criteria cri = new Criteria(page,10);
 		log.info(cri);
 		

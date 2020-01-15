@@ -31,10 +31,11 @@
             <!-- /.box-header -->
             <!-- form start -->
             <form name="data_form" role="form" action="/board/modify" method="post">
-            	<input type="hidden" id="pageNum" name="pageNum" value="<c:out value='${cri.pageNum}'/>">
-                <input type="hidden" id="amount" name="amount" value="<c:out value='${cri.amount}'/>">
-                <input type='hidden' name='type' value='<c:out value="${cri.type}"/>'>
-	              	<input type='hidden' name='keyword' value='<c:out value="${cri.keyword}"/>'>
+              <input type="text" id="pageNum" name="pageNum" value="<c:out value='${cri.pageNum}'/>">
+              <input type="text" id="amount" name="amount" value="<c:out value='${cri.amount}'/>">
+              <input type='text' name='type' value='<c:out value="${cri.type}"/>'>
+              <input type='text' name='keyword' value='<c:out value="${cri.keyword}"/>'>
+
               <div class="box-body">
                 <div class="form-group">
                   <label for="bno">Bno</label>
